@@ -4,7 +4,7 @@
   "authors": [
     "lutaev.stepan@yandex.ru"
   ],
-  "description": "Adding text bubbles into HTML elements with typesetti",
+  "description": "Adding text bubbles into HTML elements with typesetting",
   "main": "dist/js/input-bubbles.js",
   "keywords": [
     "typing",
@@ -17,12 +17,9 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "bower_components"
   ],
   "dependencies": {
-    "jquery": "~2.1.4",
-    "underscore": "~1.8.3"
+    "jquery": "~2.1.4"
   }
 }

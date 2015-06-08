@@ -1,9 +1,5 @@
 (function() {
 
-    if (typeof _ === 'undefined') {
-        throw new Error('You must load Underscore.js library!');
-    }
-
     function InputBubbles() {
 
         var _values = [];
@@ -104,12 +100,8 @@
         /**
          * Bubble template
          */
-        this.makeBubble = function(params) {
-            if (!this._template) {
-                this._template = _.template('<span class="ui-bubble-content"><%= text %></span> | <span class="ui-bubble-remove">x</span>');
-            }
-
-            return this._template(params);
+        this.makeBubble = function(text) {
+            return '<span class="ui-bubble-content">' + text + '</span> | <span class="ui-bubble-remove">x</span>';
         };
 
         /**
@@ -124,9 +116,7 @@
 
             var div = document.createElement('div');
             div.className = 'js-bubble-item ui-bubble';
-            div.innerHTML = this.makeBubble({
-                text: _text
-            });
+            div.innerHTML = this.makeBubble(_text);
 
             this.element.insertBefore(div, this.innerElement);
 
@@ -181,9 +171,10 @@
          * Clear data arrays
          */
         this.clear = function() {
-            _.map(_getAllNodes.call(this), function(node){
-                this.element.removeChild(node);
-            }.bind(this));
+            var allNodes =  _getAllNodes.call(this);
+            for(var i = 0; i < allNodes.length; ++i) {
+                this.element.removeChild(allNodes[i]);
+            }
 
             _values = [];
             _bubbles = [];
@@ -216,10 +207,11 @@
             _values = [];
             _bubbles = [];
 
-            _.map(_getAllNodes.call(this), function(node){
-                _bubbles.push(node);
-                _values.push(node.querySelector('.ui-bubble-content').innerText);
-            }.bind(this));
+            var allNodes =  _getAllNodes.call(this);
+            for(var i = 0; i < allNodes.length; ++i) {
+                _bubbles.push(allNodes[i]);
+                _values.push(allNodes[i].querySelector('.ui-bubble-content').innerText);
+            }
         };
 
         return function(options) {
@@ -284,13 +276,21 @@
         }
 
         function _getAllNodes() {
-            return _.filter(this.element.childNodes, function(node){
-                return node.nodeType == 1 && (!node.getAttribute('contenteditable') || node.getAttribute('contenteditable') === 'false');
-            });
+            var arr = [];
+            var childNodes = this.element.childNodes;
+
+            for (var i = 0; i < childNodes.length; ++i) {
+                if (childNodes[i].nodeType == 1 &&
+                    (!childNodes[i].getAttribute('contenteditable') || childNodes[i].getAttribute('contenteditable') === 'false')) {
+                    arr.push(childNodes[i]);
+                }
+            }
+
+            return arr;
         }
 
         function _onPaste() {
-            var textArr = this.innerElement.split()
+            var textArr = this.innerElement.split('');
         }
     }
 

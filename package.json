@@ -1,0 +1,35 @@
+{
+  "name": "inputBubbles",
+  "version": "1.0.0",
+  "description": "Adding text bubbles into HTML elements with typesetting",
+  "main": "./dist/js/input-bubbles.js",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-cssmin": "^0.12.3",
+    "grunt-contrib-uglify": "^0.9.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lutaev/inputBubbles.git"
+  },
+  "keywords": [
+    "typing",
+    "bubbles",
+    "dies",
+    "input"
+  ],
+  "author": {
+    "name": "Artyom Dergunov",
+    "email": "lutaev.stepan@yandex.ru"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lutaev/inputBubbles/issues"
+  },
+  "homepage": "https://github.com/lutaev/inputBubbles"
+}
