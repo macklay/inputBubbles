@@ -1,0 +1,28 @@
+{
+  "name": "inputBubbles",
+  "version": "0.9",
+  "authors": [
+    "lutaev.stepan@yandex.ru"
+  ],
+  "description": "Adding text bubbles into HTML elements with typesetti",
+  "main": "dist/js/input-bubbles.js",
+  "keywords": [
+    "typing",
+    "bubbles",
+    "dies",
+    "contenteditable",
+    "input"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "underscore": "~1.8.3"
+  }
+}

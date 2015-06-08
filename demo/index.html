@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru_RU" xmlns="http://www.w3.org/1999/html">
+<head>
+<title>Input Bubbles</title>
+<link type="text/css" rel="stylesheet" href="../src/css/input-bubbles.css">
+</head>
+<body>
+
+<div id="bubbleWrapper"></div>
+
+<script src="../bower_components/underscore/underscore-min.js"></script>
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../src/js/cursor-manager.js"></script>
+<script src="../src/js/input-bubbles.js"></script>
+<script src="../src/js/input-bubbles.jquery.js"></script>
+<script>
+    var bubblesObj = $('#bubbleWrapper').inputBubbles({
+        element: document.getElementById('ahaha'),
+        width: 500,
+        height: 50,
+        separator: [',', ';'],
+        bubbleClick: function(event) {
+            console.log(event);
+        },
+        keyup: function(event) {
+            var target = event.currentTarget;
+            var text = target.innerText;
+            if (text.length > 10) {
+                target.innerText = text.slice(0, 10);
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
