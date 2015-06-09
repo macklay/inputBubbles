@@ -2,7 +2,7 @@
 <html lang="ru_RU" xmlns="http://www.w3.org/1999/html">
 <head>
 <title>Input Bubbles</title>
-<link type="text/css" rel="stylesheet" href="../src/css/input-bubbles.css">
+<link type="text/css" rel="stylesheet" href="../dist/css/input-bubbles.min.css">
 </head>
 <body>
 
@@ -12,21 +12,17 @@
 <script src="../dist/js/input-bubbles.min.js"></script>
 
 <script>
-    var bubblesObj = $('#bubbleWrapper').inputBubbles({
-        element: document.getElementById('ahaha'),
+    var bubbles = inputBubbles({
+        element: document.getElementById('bubbleWrapper'),
         width: 500,
         height: 50,
         separator: [',', ';'],
-        bubbleClick: function(event) {
-            console.log(event);
-        },
-        keyup: function(event) {
-            var target = event.currentTarget;
-            var text = target.innerText;
-            if (text.length > 10) {
-                target.innerText = text.slice(0, 10);
-            }
-        }
+        maxLength: 5
+    });
+
+
+    $('#bubbleWrapper').inputBubbles('on', 'click', function() {
+        alert(11)
     });
 </script>
 

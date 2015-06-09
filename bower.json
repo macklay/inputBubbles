@@ -1,11 +1,14 @@
 {
   "name": "inputBubbles",
-  "version": "0.9",
+  "version": "0.9.1",
   "authors": [
     "lutaev.stepan@yandex.ru"
   ],
   "description": "Adding text bubbles into HTML elements with typesetting",
-  "main": "dist/js/input-bubbles.js",
+  "main": [
+    "dist/js/input-bubbles.js",
+    "dist/css/input-bubbles.min.css"
+  ],
   "keywords": [
     "typing",
     "bubbles",

@@ -3,70 +3,18 @@
     function InputBubbles() {
 
         var _values = [];
-        var _bubbles = [];
-        var _actions = {
-            add:          null,
-            clear:        null,
-            remove:       null,
-            bubbleClick:  null,
-            keyup:        null
-        };
-
+        var _nodes = [];
 
         /**
-         * Initializing
-         * @param options Plugin options
+         * Sets option
+         * @param option Name of option
+         * @param value value of option
          */
-        this.init = function(options) {
-            if (options === null) {
-                throw new Error('Invalid parameter "options"!');
+        this.set = function(option, value) {
+            if (typeof option !== 'string') {
+                throw new Error('Invalid option!');
             }
-
-            if (typeof options === 'undefined') {
-                throw new Error('Initializing without options!');
-            }
-
-            if (typeof options.childNodes !== 'undefined') {
-                this.options = {
-                    element: options
-                };
-            } else if (({}).toString.call(options).slice(8, -1) !== 'Object') {
-                throw new Error('Invalid parameter "options"');
-            } else {
-                this.options = options;
-
-                if (options.element === null) {
-                    throw new Error('Element was not found!');
-                }
-
-                if (typeof this.options.element === 'undefined') {
-                    throw new Error('Initializing without element!');
-                }
-
-                for (var key in _actions) {
-                    if (this.options[key] && typeof this.options[key] === 'function') {
-                        _actions[key] = this.options[key];
-                    }
-                }
-            }
-
-            this.element = this.options.element;
-
-            if (!this.options.height) {
-                this.options.height = 30;
-            }
-            if (!this.options.width) {
-                this.options.width = 370;
-            }
-
-            this.element.style.minHeight = this.options.height + 'px';
-            this.element.style.width = this.options.width + 'px';
-
-            _makeEditable.call(this);
-
-            this.innerElement.addEventListener('keyup', _onKeyUp.bind(this));
-            this.innerElement.addEventListener('keydown', _onKeyDown.bind(this));
-            this.innerElement.addEventListener('paste', _onPaste.bind(this));
+            this[option] = value;
         };
 
         /**
@@ -78,7 +26,7 @@
             if (typeof action !== 'string' || typeof func !== 'function') {
                 throw new Error('Invalid operation!');
             }
-            _actions[action] = func;
+            this[action] = func;
         };
 
         /**
@@ -86,22 +34,20 @@
          * @param action Name of event
          * @param params Parameters
          */
-        this.trigger = function(action, params) {
+        this.trigger = function(action) {
             if (typeof action !== 'string') {
                 throw new Error('Invalid operation!');
             }
-            if (!_actions[action]) {
+            if (!this[action]) {
                 throw new Error('Action "' + action + '" was not defined!')
             }
 
-            params ? _actions[action](params) : _actions[action]();
-        };
-
-        /**
-         * Bubble template
-         */
-        this.makeBubble = function(text) {
-            return '<span class="ui-bubble-content">' + text + '</span> | <span class="ui-bubble-remove">x</span>';
+            if (arguments.length > 1) {
+                var args = ([]).slice.call(arguments);
+                this[action].apply(this, args.splice(1, args.length));
+            } else {
+                this[action]();
+            }
         };
 
         /**
@@ -116,38 +62,23 @@
 
             var div = document.createElement('div');
             div.className = 'js-bubble-item ui-bubble';
-            div.innerHTML = this.makeBubble(_text);
+            div.innerHTML = _makeBubble.call(this, _text);
 
             this.element.insertBefore(div, this.innerElement);
 
             _values.push(_text);
-            _bubbles.push(div);
+            _nodes.push(div);
 
-            div.querySelector('.ui-bubble-remove').addEventListener('click', this.removeBubble.bind(this));
+            div.querySelector('.ui-bubble-remove').addEventListener('click', _removeBubble.bind(this));
             this.innerElement.innerText = '';
             this.innerElement.focus();
 
-            if (_actions.add) {
-                _actions.add(div, _text);
+            if (this.add || typeof this.add === 'function') {
+                this.add(div, _text);
             }
 
-            if (_actions.bubbleClick) {
-                div.addEventListener('click', _actions.bubbleClick);
-            }
-        };
-
-        /**
-         * Removes bubble
-         * @param event DOM event
-         */
-        this.removeBubble = function(event) {
-            event.stopPropagation();
-            var node = event.currentTarget.parentNode;
-            this.element.removeChild(node);
-            this.refreshData();
-
-            if (_actions.remove) {
-                _actions.remove();
+            if (this.click || typeof this.click === 'function') {
+                div.addEventListener('click', this.click);
             }
         };
 
@@ -155,14 +86,14 @@
          * Removes last bubble
          */
         this.removeLastBubble = function() {
-            if (_bubbles.length) {
+            if (_nodes.length) {
                 _values.pop();
-                var div = _bubbles.pop();
+                var div = _nodes.pop();
                 this.element.removeChild(div);
             }
 
-            if (_actions.remove) {
-                _actions.remove();
+            if (this.remove || typeof this.remove === 'function') {
+                this.remove();
             }
         };
 
@@ -177,10 +108,10 @@
             }
 
             _values = [];
-            _bubbles = [];
+            _nodes = [];
 
-            if (_actions.clear) {
-                _actions.clear();
+            if (this.clear || typeof this.clear === 'function') {
+                this.clear();
             }
         };
 
@@ -188,7 +119,7 @@
          * Returns bubbles as text values
          * @returns {Array}
          */
-        this.getValues = function() {
+        this.values = function() {
             return _values;
         };
 
@@ -196,8 +127,8 @@
          * Returns bubbles as DOM nodes
          * @returns {Array}
          */
-        this.getBubbles = function() {
-            return _bubbles;
+        this.nodes = function() {
+            return _nodes;
         };
 
         /**
@@ -205,19 +136,92 @@
          */
         this.refreshData = function() {
             _values = [];
-            _bubbles = [];
+            _nodes = [];
 
             var allNodes =  _getAllNodes.call(this);
             for(var i = 0; i < allNodes.length; ++i) {
-                _bubbles.push(allNodes[i]);
+                _nodes.push(allNodes[i]);
                 _values.push(allNodes[i].querySelector('.ui-bubble-content').innerText);
             }
         };
 
         return function(options) {
-            this.init(options);
-            return this;
+            return _init.call(this, options);
         }.bind(this);
+
+
+        // Private methods
+
+        function _init(options) {
+            if (options === null || typeof options === 'undefined') {
+                throw new Error('Initialization without options!');
+            }
+
+
+            if (typeof options.childNodes !== 'undefined') {
+                this.options = {
+                    element: options
+                };
+            }
+
+            else if (({}).toString.call(options).slice(8, -1) !== 'Object') {
+                throw new Error('Invalid parameter "options"');
+            }
+
+            else if (typeof options.id !== 'undefined') {
+                return this.initialized[options.id];
+            }
+
+            else {
+                this.options = options;
+
+                if (this.options.element === null || typeof this.options.element === 'undefined') {
+                    throw new Error('Initializing without element or element was not found!');
+                }
+            }
+
+            for (var key in this.options) {
+                if (this.options[key] && typeof this.options[key] === 'function') {
+                    this[key] = this.options[key];
+                    delete this.options[key];
+                }
+            }
+
+            this.element = this.options.element;
+
+            this.options.height = this.options.height || 30;
+            this.options.width = this.options.width || 370;
+
+            this.element.style.minHeight = this.options.height + 'px';
+            this.element.style.width = this.options.width + 'px';
+
+            _makeEditable.call(this);
+
+            this.innerElement.addEventListener('keyup', _onKeyUp.bind(this));
+            this.innerElement.addEventListener('keydown', _onKeyDown.bind(this));
+            this.innerElement.addEventListener('paste', _onPaste.bind(this));
+
+            var newGuid = _guid();
+            this.initialized[newGuid] = this;
+            this.element.setAttribute('data-input-bundles', newGuid);
+
+            return this;
+        }
+
+        function _makeBubble(text) {
+            return '<span class="ui-bubble-content">' + text + ' | </span><span class="ui-bubble-remove">x</span>';
+        }
+
+        function _removeBubble(event) {
+            event.stopPropagation();
+            var node = event.currentTarget.parentNode;
+            this.element.removeChild(node);
+            this.refreshData();
+
+            if (this.remove || typeof this.remove === 'function') {
+                this.remove();
+            }
+        }
 
         function _onKeyDown(event) {
             if (event.keyCode === 13) {
@@ -226,12 +230,18 @@
         }
 
         function _onKeyUp(event) {
-            if (event.keyCode === 32 || event.keyCode === 13) {
+            if ((event.keyCode === 32 && !this.options.allowSpaces) || event.keyCode === 13) {
                 this.addBubble();
             } else if (event.keyCode === 8 && this.toDeleteFlag) {
                 this.removeLastBubble();
             } else if (this.options.separator) {
                 var text = this.innerElement.innerText;
+
+                if (this.options.maxLength && text.length > this.options.maxLength) {
+                    text = text.slice(0, this.options.maxLength);
+                    this.innerElement.innerText = text;
+                }
+
                 for (var i = 0; i < this.options.separator.length; ++i) {
                     if (text.indexOf(this.options.separator[i]) !== -1) {
                         var _text = text.replace(this.options.separator[i], '');
@@ -252,10 +262,11 @@
                 this.toDeleteFlag = false;
             }
 
-            if (_actions.keyup) {
-                _actions.keyup(event);
-                cursorManager.setEndOfContenteditable(this.innerElement);
+            if (this.keyup || typeof this.keyup === 'function') {
+                this.keyup(event);
             }
+
+            cursorManager.setEndOfContenteditable(this.innerElement);
         }
 
         function _makeEditable() {
@@ -285,14 +296,36 @@
                     arr.push(childNodes[i]);
                 }
             }
-
             return arr;
         }
 
+        function _escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
         function _onPaste() {
-            var textArr = this.innerElement.split('');
+            setTimeout(function() {
+                this.addBubble(_escapeHtml(this.innerElement.innerText));
+            }.bind(this), 0);
+        }
+
+        function _guid() {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            }
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
         }
     }
+
+    InputBubbles.prototype.initialized = {};
 
     window.inputBubbles = new InputBubbles();
 })();
