@@ -111,6 +111,7 @@ To get started you need 3 things in your page:
  * `width` - Width of container in pixels.
  * `height` - Maximum of height of container in pixels.
  * `separator` - Array with symbols-delimeters. Once you type one of this symbols, next bubble will be created. For example: 
+ 
  ```javascript
      $('#bubbleWrapper').inputBubbles({
          separator: [',', ':']
@@ -150,41 +151,48 @@ To get started you need 3 things in your page:
  
 #### Available methods are:
 
-* `set` - This method sets an option after initialization. 
+ * `set` - This method sets an option after initialization.
+ 
  ```javascript
      $('#bubbleWrapper').inputBubbles('set', 'maxLength', 15);
  ```
  * `on` - Add an event listener after initialization
+ 
  ```javascript
      $('#bubbleWrapper').inputBubbles('on', 'click', function(event) {
          console.log(event.currentTarget.innerText);   
      });
  ```
  * `trigger` - Triggers event, which was defined earlier
+ 
  ```javascript
       $('#bubbleWrapper').inputBubbles('trigger', 'click');
  ```
  * `addBubble` - You can manually add new bubble. 
+ 
  ```javascript
        $('#bubbleWrapper').inputBubbles('addBubble', 'I am a bubble!');
  ```
  * `removeLastBubble` - Removes last bubble
+ 
  ```javascript
        $('#bubbleWrapper').inputBubbles('removeLastBubble');
  ```
  * `clear` Removes all bubbles
+ 
  ```javascript
        $('#bubbleWrapper').inputBubbles('clear');
  ```
  * `values` Returns text content of all bubbles as array of strings
+ 
  ```javascript
        $('#bubbleWrapper').inputBubbles('values');
  ```
  * `nodes` Returns all bubbles as array of DOM-elements
+ 
  ```javascript
        $('#bubbleWrapper').inputBubbles('nodes');
  ```
- * ``
 
 ### Events
 
