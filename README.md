@@ -11,24 +11,32 @@ You can install this package locally either with `npm`, or `bower`.
 
 ### npm
 
-```shell
+
 #### To install latest formal release 
+```
 npm install input-bubbles
+```
 
 #### To install latest release and update package.json
+```
 npm install input-bubbles --save-dev
 ```
 
 ### bower
 
-```shell
+
 #### To get the latest stable version, use bower from the command line.
+```
 bower install input-bubbles
+```
 
 #### To save the bower settings for future use:
+```
 bower install input-bubbles --save
+```
 
 #### Later, you can use easily update with:
+```
 bower update
 ```
 
@@ -161,7 +169,23 @@ To get started you need 3 things in your page:
  ```javascript
        $('#bubbleWrapper').inputBubbles('addBubble', 'I am a bubble!');
  ```
- * `` 
+ * `removeLastBubble` - Removes last bubble
+ ```javascript
+       $('#bubbleWrapper').inputBubbles('removeLastBubble');
+ ```
+ * `clear` Removes all bubbles
+ ```javascript
+       $('#bubbleWrapper').inputBubbles('clear');
+ ```
+ * `values` Returns text content of all bubbles as array of strings
+ ```javascript
+       $('#bubbleWrapper').inputBubbles('values');
+ ```
+ * `nodes` Returns all bubbles as array of DOM-elements
+ ```javascript
+       $('#bubbleWrapper').inputBubbles('nodes');
+ ```
+ * ``
 
 ### Events
 
