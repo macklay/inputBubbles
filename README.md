@@ -63,6 +63,7 @@ To get started you need 3 things in your page:
 <script>
     var bubblesObj = inputBubbles(document.getElementById('bubbleWrapper'));
 </script>
+```
 
 #### Initialize as jQuery plugin
 
