@@ -90,7 +90,7 @@
                 this.remove(node);
             }
             this.element.removeChild(node);
-            _refreshData.call(this);
+            this.refreshData();
         };
 
         /**
@@ -142,6 +142,20 @@
          */
         this.nodes = function() {
             return _nodes;
+        };
+
+        /**
+         * Refreshes _values and _nodes from DOM
+         */
+        this.refreshData = function() {
+            _values = [];
+            _nodes = [];
+
+            var allNodes =  _getAllNodes.call(this);
+            for(var i = 0; i < allNodes.length; ++i) {
+                _nodes.push(allNodes[i]);
+                _values.push(allNodes[i].querySelector('.ui-bubble-content').innerText);
+            }
         };
 
         return function(options) {
@@ -208,7 +222,7 @@
         }
 
         function _makeBubble(text) {
-            return '<span class="ui-bubble-content">' + text + ' | </span><span class="ui-bubble-remove">x</span>';
+            return '<span class="ui-bubble-content">' + text + '</span><span class="ui-bubble-remove">x</span>';
         }
 
         function _removeBubble(event) {
@@ -224,7 +238,7 @@
         }
 
         function _onKeyUp(event) {
-            if ((event.keyCode === 32 && !this.options.allowSpaces) || event.keyCode === 13) {
+            if ((event.keyCode === 32 && !this.options.allowSpaces) || (event.keyCode === 13 && !this.options.allowEnter)) {
                 this.addBubble();
             } else if (event.keyCode === 8 && this.toDeleteFlag) {
                 this.removeLastBubble();
@@ -306,17 +320,6 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
-        }
-
-        function _refreshData() {
-            _values = [];
-            _nodes = [];
-
-            var allNodes =  _getAllNodes.call(this);
-            for(var i = 0; i < allNodes.length; ++i) {
-                _nodes.push(allNodes[i]);
-                _values.push(allNodes[i].querySelector('.ui-bubble-content').innerText);
-            }
         }
 
         function _guid() {

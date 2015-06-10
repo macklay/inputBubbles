@@ -156,7 +156,7 @@
                 this.remove(node);
             }
             this.element.removeChild(node);
-            _refreshData.call(this);
+            this.refreshData();
         };
 
         /**
@@ -208,6 +208,20 @@
          */
         this.nodes = function() {
             return _nodes;
+        };
+
+        /**
+         * Refreshes _values and _nodes from DOM
+         */
+        this.refreshData = function() {
+            _values = [];
+            _nodes = [];
+
+            var allNodes =  _getAllNodes.call(this);
+            for(var i = 0; i < allNodes.length; ++i) {
+                _nodes.push(allNodes[i]);
+                _values.push(allNodes[i].querySelector('.ui-bubble-content').innerText);
+            }
         };
 
         return function(options) {
@@ -274,7 +288,7 @@
         }
 
         function _makeBubble(text) {
-            return '<span class="ui-bubble-content">' + text + ' | </span><span class="ui-bubble-remove">x</span>';
+            return '<span class="ui-bubble-content">' + text + '</span><span class="ui-bubble-remove">x</span>';
         }
 
         function _removeBubble(event) {
@@ -290,7 +304,7 @@
         }
 
         function _onKeyUp(event) {
-            if ((event.keyCode === 32 && !this.options.allowSpaces) || event.keyCode === 13) {
+            if ((event.keyCode === 32 && !this.options.allowSpaces) || (event.keyCode === 13 && !this.options.allowEnter)) {
                 this.addBubble();
             } else if (event.keyCode === 8 && this.toDeleteFlag) {
                 this.removeLastBubble();
@@ -374,17 +388,6 @@
                 .replace(/'/g, "&#039;");
         }
 
-        function _refreshData() {
-            _values = [];
-            _nodes = [];
-
-            var allNodes =  _getAllNodes.call(this);
-            for(var i = 0; i < allNodes.length; ++i) {
-                _nodes.push(allNodes[i]);
-                _values.push(allNodes[i].querySelector('.ui-bubble-content').innerText);
-            }
-        }
-
         function _guid() {
             function s4() {
                 return Math.floor((1 + Math.random()) * 0x10000)
@@ -433,18 +436,17 @@
 
                 if (arguments.length > 1) {
                     var args = ([]).slice.call(arguments);
-                    instance[options].apply(instance, args.splice(1, args.length));
+                    return instance[options].apply(instance, args.splice(1, args.length));
                 } else {
-                    instance[options]();
+                    return instance[options]();
                 }
-                return this;
             }
 
 
             var _options = options ? options : {};
             _options.element = this[0];
 
-            this.inputBubbles = window.inputBubbles(_options);
+            window.inputBubbles(_options);
 
             return this;
         };
