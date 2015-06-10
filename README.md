@@ -117,6 +117,7 @@ To get started you need 3 things in your page:
          separator: [',', ':']
      });
  ```
+ 
  * `allowSpaces` - This options allows typing whitespaces in bubbles without creating new bubble after each whitespace
  * `maxLength` - Maximum of symbols allows in input field
 
@@ -156,38 +157,51 @@ To get started you need 3 things in your page:
  ```javascript
      $('#bubbleWrapper').inputBubbles('set', 'maxLength', 15);
  ```
- * `on` - Add an event listener after initialization
+ 
+ * `on` - Adds an event listener after initialization
  
  ```javascript
      $('#bubbleWrapper').inputBubbles('on', 'click', function(event) {
          console.log(event.currentTarget.innerText);   
      });
  ```
+ 
  * `trigger` - Triggers event, which was defined earlier
  
  ```javascript
       $('#bubbleWrapper').inputBubbles('trigger', 'click');
  ```
- * `addBubble` - You can manually add new bubble. 
+ 
+ * `addBubble` - Using this method, you can manually add new bubble. 
  
  ```javascript
        $('#bubbleWrapper').inputBubbles('addBubble', 'I am a bubble!');
  ```
+ 
+ * `removeBubble` - Removes selected bubble. Parameter must be a DOM-element
+ 
+ ```javascript
+       $('#bubbleWrapper').inputBubbles('removeBubble', $('#someBubbleId')[0]);        
+ ```  
+ 
  * `removeLastBubble` - Removes last bubble
  
  ```javascript
        $('#bubbleWrapper').inputBubbles('removeLastBubble');
- ```
+ ```  
+ 
  * `clear` Removes all bubbles
  
  ```javascript
        $('#bubbleWrapper').inputBubbles('clear');
  ```
+ 
  * `values` Returns text content of all bubbles as array of strings
  
  ```javascript
        $('#bubbleWrapper').inputBubbles('values');
  ```
+ 
  * `nodes` Returns all bubbles as array of DOM-elements
  
  ```javascript
@@ -196,7 +210,40 @@ To get started you need 3 things in your page:
 
 ### Events
 
-Availalble events are:
+#### Adds an event listener with native initialization
+```javascript
+     // Initialization
+     var bubbles = inputBubbles({
+         element: document.getElementById('bubbleWrapper'),
+         click: function() {
+            alert('click'!)
+         }
+     });
+     
+     // After initialization
+     bubbles.on('keyup', function(event) {
+        console.log(event)
+     });
+ ```
+ 
+#### As jQuery plugin
+```javascript
+    // Initialization
+    $('#bubbleWrapper').inputBubbles({ 
+        width: 500,
+        height: 30,
+        keyup: function(event) {
+            console.log(event);    
+        }
+    });
+      
+    // After initialization
+    $('#bubbleWrapper').inputBubbles('on', 'click', function(event) {
+        console.log(event.currentTarget.innerText);   
+    });
+``` 
+
+#### Availalble events are:
 
 
 

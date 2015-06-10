@@ -83,17 +83,27 @@
         };
 
         /**
+         * Removes bubble
+         */
+        this.removeBubble = function(node) {
+            if (this.remove || typeof this.remove === 'function') {
+                this.remove(node);
+            }
+            this.element.removeChild(node);
+            _refreshData.call(this);
+        };
+
+        /**
          * Removes last bubble
          */
         this.removeLastBubble = function() {
             if (_nodes.length) {
                 _values.pop();
                 var div = _nodes.pop();
+                if (this.remove || typeof this.remove === 'function') {
+                    this.remove(div);
+                }
                 this.element.removeChild(div);
-            }
-
-            if (this.remove || typeof this.remove === 'function') {
-                this.remove();
             }
         };
 
@@ -104,6 +114,9 @@
         this.clear = function() {
             var allNodes =  _getAllNodes.call(this);
             for(var i = 0; i < allNodes.length; ++i) {
+                if (this.remove || typeof this.remove === 'function') {
+                    this.remove(allNodes[i]);
+                }
                 this.element.removeChild(allNodes[i]);
             }
 
@@ -201,12 +214,7 @@
         function _removeBubble(event) {
             event.stopPropagation();
             var node = event.currentTarget.parentNode;
-            this.element.removeChild(node);
-            _refreshData.call(this);
-
-            if (this.remove || typeof this.remove === 'function') {
-                this.remove();
-            }
+            this.removeBubble(node);
         }
 
         function _onKeyDown(event) {
