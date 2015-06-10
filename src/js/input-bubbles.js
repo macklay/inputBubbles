@@ -111,7 +111,7 @@
          * Removes ALL nodes BUT not contentEditable from element
          * Clear data arrays
          */
-        this.clear = function() {
+        this.clearAll = function() {
             var allNodes =  _getAllNodes.call(this);
             for(var i = 0; i < allNodes.length; ++i) {
                 if (this.remove || typeof this.remove === 'function') {

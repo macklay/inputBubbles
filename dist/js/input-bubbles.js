@@ -149,17 +149,27 @@
         };
 
         /**
+         * Removes bubble
+         */
+        this.removeBubble = function(node) {
+            if (this.remove || typeof this.remove === 'function') {
+                this.remove(node);
+            }
+            this.element.removeChild(node);
+            _refreshData.call(this);
+        };
+
+        /**
          * Removes last bubble
          */
         this.removeLastBubble = function() {
             if (_nodes.length) {
                 _values.pop();
                 var div = _nodes.pop();
+                if (this.remove || typeof this.remove === 'function') {
+                    this.remove(div);
+                }
                 this.element.removeChild(div);
-            }
-
-            if (this.remove || typeof this.remove === 'function') {
-                this.remove();
             }
         };
 
@@ -167,9 +177,12 @@
          * Removes ALL nodes BUT not contentEditable from element
          * Clear data arrays
          */
-        this.clear = function() {
+        this.clearAll = function() {
             var allNodes =  _getAllNodes.call(this);
             for(var i = 0; i < allNodes.length; ++i) {
+                if (this.remove || typeof this.remove === 'function') {
+                    this.remove(allNodes[i]);
+                }
                 this.element.removeChild(allNodes[i]);
             }
 
@@ -195,20 +208,6 @@
          */
         this.nodes = function() {
             return _nodes;
-        };
-
-        /**
-         * Refresh all sets
-         */
-        this.refreshData = function() {
-            _values = [];
-            _nodes = [];
-
-            var allNodes =  _getAllNodes.call(this);
-            for(var i = 0; i < allNodes.length; ++i) {
-                _nodes.push(allNodes[i]);
-                _values.push(allNodes[i].querySelector('.ui-bubble-content').innerText);
-            }
         };
 
         return function(options) {
@@ -281,12 +280,7 @@
         function _removeBubble(event) {
             event.stopPropagation();
             var node = event.currentTarget.parentNode;
-            this.element.removeChild(node);
-            this.refreshData();
-
-            if (this.remove || typeof this.remove === 'function') {
-                this.remove();
-            }
+            this.removeBubble(node);
         }
 
         function _onKeyDown(event) {
@@ -335,6 +329,12 @@
             cursorManager.setEndOfContenteditable(this.innerElement);
         }
 
+        function _onPaste() {
+            setTimeout(function() {
+                this.addBubble(_escapeHtml(this.innerElement.innerText));
+            }.bind(this), 0);
+        }
+
         function _makeEditable() {
             while (this.element.firstChild) {
                 this.element.removeChild(this.element.firstChild);
@@ -374,10 +374,15 @@
                 .replace(/'/g, "&#039;");
         }
 
-        function _onPaste() {
-            setTimeout(function() {
-                this.addBubble(_escapeHtml(this.innerElement.innerText));
-            }.bind(this), 0);
+        function _refreshData() {
+            _values = [];
+            _nodes = [];
+
+            var allNodes =  _getAllNodes.call(this);
+            for(var i = 0; i < allNodes.length; ++i) {
+                _nodes.push(allNodes[i]);
+                _values.push(allNodes[i].querySelector('.ui-bubble-content').innerText);
+            }
         }
 
         function _guid() {

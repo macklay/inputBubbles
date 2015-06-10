@@ -169,43 +169,43 @@ To get started you need 3 things in your page:
  * `trigger` - Triggers event, which was defined earlier
  
  ```javascript
-      $('#bubbleWrapper').inputBubbles('trigger', 'click');
+     $('#bubbleWrapper').inputBubbles('trigger', 'click');
  ```
  
  * `addBubble` - Using this method, you can manually add new bubble. 
  
  ```javascript
-       $('#bubbleWrapper').inputBubbles('addBubble', 'I am a bubble!');
+      $('#bubbleWrapper').inputBubbles('addBubble', 'I am a bubble!');
  ```
  
  * `removeBubble` - Removes selected bubble. Parameter must be a DOM-element
  
  ```javascript
-       $('#bubbleWrapper').inputBubbles('removeBubble', $('#someBubbleId')[0]);        
+      $('#bubbleWrapper').inputBubbles('removeBubble', $('#someBubbleId')[0]);        
  ```  
  
  * `removeLastBubble` - Removes last bubble
  
  ```javascript
-       $('#bubbleWrapper').inputBubbles('removeLastBubble');
+      $('#bubbleWrapper').inputBubbles('removeLastBubble');
  ```  
  
- * `clear` Removes all bubbles
+ * `clearAll` Removes all bubbles
  
  ```javascript
-       $('#bubbleWrapper').inputBubbles('clear');
+      $('#bubbleWrapper').inputBubbles('clearAll');
  ```
  
  * `values` Returns text content of all bubbles as array of strings
  
  ```javascript
-       $('#bubbleWrapper').inputBubbles('values');
+      $('#bubbleWrapper').inputBubbles('values');
  ```
  
  * `nodes` Returns all bubbles as array of DOM-elements
  
  ```javascript
-       $('#bubbleWrapper').inputBubbles('nodes');
+      $('#bubbleWrapper').inputBubbles('nodes');
  ```
 
 ### Events
@@ -244,6 +244,14 @@ To get started you need 3 things in your page:
 ``` 
 
 #### Availalble events are:
+
+ * `click` - Fires by mouse click on any bubble.
+ 
+ * `keyup` - Fires after input some symbols in text field.
+ 
+ * `remove` - Fires by removing any bubble.
+ 
+ * `clear` - Fires by removing all bubbles (method clearAll).
 
 
 
