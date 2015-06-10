@@ -11,32 +11,30 @@ You can install this package locally either with `npm`, or `bower`.
 
 ### npm
 
-
-#### To install latest formal release 
-```
+To install latest formal release 
+```shell
 npm install input-bubbles
 ```
 
-#### To install latest release and update package.json
-```
+To install latest release and update package.json
+```shell
 npm install input-bubbles --save-dev
 ```
 
 ### bower
 
-
-#### To get the latest stable version, use bower from the command line.
-```
+To get the latest stable version, use bower from the command line.
+```shell
 bower install input-bubbles
 ```
 
-#### To save the bower settings for future use:
-```
+To save the bower settings for future use:
+```shell
 bower install input-bubbles --save
 ```
 
-#### Later, you can use easily update with:
-```
+Later, you can use easily update with:
+```shell
 bower update
 ```
 
