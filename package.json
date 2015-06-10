@@ -1,6 +1,6 @@
 {
   "name": "input-bubbles",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Adding text bubbles into HTML elements with typesetting",
   "main": "./dist/js/input-bubbles.js",
   "devDependencies": {
@@ -9,9 +9,7 @@
       "grunt-contrib-cssmin": "^0.12.3",
       "grunt-contrib-uglify": "^0.9.1"
   },
-  "dependencies": {
-    "jquery": "~2.1.4"
-  },
+  "dependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
