@@ -6,7 +6,7 @@ inputBubbles is a javascript plugin, that can help transfom text in text fields 
 
  
  
-## Installing inputBubbles 
+## Installing input-bubbles 
 
 You can install this package locally either with `npm`, or `bower`. 
 
