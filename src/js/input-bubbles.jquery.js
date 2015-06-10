@@ -30,18 +30,17 @@
 
                 if (arguments.length > 1) {
                     var args = ([]).slice.call(arguments);
-                    instance[options].apply(instance, args.splice(1, args.length));
+                    return instance[options].apply(instance, args.splice(1, args.length));
                 } else {
-                    instance[options]();
+                    return instance[options]();
                 }
-                return this;
             }
 
 
             var _options = options ? options : {};
             _options.element = this[0];
 
-            this.inputBubbles = window.inputBubbles(_options);
+            window.inputBubbles(_options);
 
             return this;
         };
