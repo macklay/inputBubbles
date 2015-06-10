@@ -3,6 +3,7 @@
 inputBubbles is a javascript plugin, that can help transfom text in text fields in small panels (bubbles). It is absolutely free, [open source](https://github.com/lutaev/inputBubbles) and distributed under the MIT license.
 
  This plugin is very simple and may be used native or as jQuery plugin. 
+
  
  
 ## Installing inputBubbles 
@@ -38,6 +39,8 @@ Later, you can use easily update with:
 bower update
 ```
 
+
+
 ## Usage
 
 ### Include all neccessary files
@@ -52,6 +55,8 @@ To get started you need 3 things in your page:
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="dist/js/input-bubbles.min.js"></script>
 ```
+
+
 
 ### Initialize container for bubbles (native)
 
@@ -77,6 +82,8 @@ To get started you need 3 things in your page:
     });
 </script>
 ```
+
+
 
 ### Options
 
@@ -121,6 +128,7 @@ To get started you need 3 things in your page:
  * `allowSpaces` - This options allows typing whitespaces in bubbles without creating new bubble after each whitespace
  * `maxLength` - Maximum of symbols allows in input field
 
+ 
  
 ### Methods
 
@@ -207,6 +215,8 @@ To get started you need 3 things in your page:
  ```javascript
       $('#bubbleWrapper').inputBubbles('nodes');
  ```
+
+
 
 ### Events
 
