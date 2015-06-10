@@ -17,12 +17,12 @@
         width: 500,
         height: 50,
         separator: [',', ';'],
-        maxLength: 5
+        maxLength: 10
     });
 
 
-    $('#bubbleWrapper').inputBubbles('on', 'click', function() {
-        alert(11)
+    $('#bubbleWrapper').inputBubbles('on', 'click', function(event) {
+        console.log(event);
     });
 </script>
 
