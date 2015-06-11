@@ -61,6 +61,37 @@
             range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
             range.select();//Select the range (make it the visible selection
         }
-    }
+    };
+
+    cursorManager.getCaretPosition = function(contentEditableElement) {
+
+        while(getLastChildElement(contentEditableElement) &&
+        canContainText(getLastChildElement(contentEditableElement))) {
+            contentEditableElement = getLastChildElement(contentEditableElement);
+        }
+
+        var caretPos = 0,
+            sel, range;
+        if (window.getSelection) {
+            sel = window.getSelection();
+            if (sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                if (range.commonAncestorContainer.parentNode == contentEditableElement) {
+                    caretPos = range.endOffset;
+                }
+            }
+        } else if (document.selection && document.selection.createRange) {
+            range = document.selection.createRange();
+            if (range.parentElement() == contentEditableElement) {
+                var tempEl = document.createElement("span");
+                contentEditableElement.insertBefore(tempEl, contentEditableElement.firstChild);
+                var tempRange = range.duplicate();
+                tempRange.moveToElementText(tempEl);
+                tempRange.setEndPoint("EndToEnd", range);
+                caretPos = tempRange.text.length;
+            }
+        }
+        return caretPos;
+    };
 
 }( window.cursorManager = window.cursorManager || {}));

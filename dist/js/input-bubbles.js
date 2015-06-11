@@ -61,7 +61,38 @@
             range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
             range.select();//Select the range (make it the visible selection
         }
-    }
+    };
+
+    cursorManager.getCaretPosition = function(contentEditableElement) {
+
+        while(getLastChildElement(contentEditableElement) &&
+        canContainText(getLastChildElement(contentEditableElement))) {
+            contentEditableElement = getLastChildElement(contentEditableElement);
+        }
+
+        var caretPos = 0,
+            sel, range;
+        if (window.getSelection) {
+            sel = window.getSelection();
+            if (sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                if (range.commonAncestorContainer.parentNode == contentEditableElement) {
+                    caretPos = range.endOffset;
+                }
+            }
+        } else if (document.selection && document.selection.createRange) {
+            range = document.selection.createRange();
+            if (range.parentElement() == contentEditableElement) {
+                var tempEl = document.createElement("span");
+                contentEditableElement.insertBefore(tempEl, contentEditableElement.firstChild);
+                var tempRange = range.duplicate();
+                tempRange.moveToElementText(tempEl);
+                tempRange.setEndPoint("EndToEnd", range);
+                caretPos = tempRange.text.length;
+            }
+        }
+        return caretPos;
+    };
 
 }( window.cursorManager = window.cursorManager || {}));
 (function() {
@@ -70,6 +101,17 @@
 
         var _values = [];
         var _nodes = [];
+
+        /**
+         * Returns option
+         * @param option Name of option
+         */
+        this.get = function(option) {
+            if (typeof option !== 'string') {
+                throw new Error('Invalid option!');
+            }
+            return this[option];
+        };
 
         /**
          * Sets option
@@ -288,7 +330,9 @@
         }
 
         function _makeBubble(text) {
-            return '<span class="ui-bubble-content">' + text + '</span><span class="ui-bubble-remove">x</span>';
+            return '<span class="ui-bubble-content" title="' + text + '" style="' +
+            (this.options.bubbleTextWidth ? ('max-width: ' + this.options.bubbleTextWidth + 'px') : '') + '">' +
+            text + '</span><span class="ui-bubble-remove">x</span>';
         }
 
         function _removeBubble(event) {
@@ -304,33 +348,32 @@
         }
 
         function _onKeyUp(event) {
-            if ((event.keyCode === 32 && !this.options.allowSpaces) || (event.keyCode === 13 && !this.options.allowEnter)) {
+
+            var position = cursorManager.getCaretPosition(this.innerElement);
+            var text = this.innerElement.innerText;
+
+            if ((event.keyCode === 32 && !this.options.allowSpaces && text.length === position) || (event.keyCode === 13 && !this.options.allowEnter)) {
                 this.addBubble();
             } else if (event.keyCode === 8 && this.toDeleteFlag) {
                 this.removeLastBubble();
             } else if (this.options.separator) {
-                var text = this.innerElement.innerText;
-
-                if (this.options.maxLength && text.length > this.options.maxLength) {
-                    text = text.slice(0, this.options.maxLength);
-                    this.innerElement.innerText = text;
-                }
-
-                for (var i = 0; i < this.options.separator.length; ++i) {
-                    if (text.indexOf(this.options.separator[i]) !== -1) {
-                        var _text = text.replace(this.options.separator[i], '');
-                        if (!_text) {
-                            this.innerElement.innerText = '';
-                            this.innerElement.focus();
-                        } else {
-                            this.addBubble(text.replace(this.options.separator[i], ''));
+                if (text.length === position) {
+                    for (var i = 0; i < this.options.separator.length; ++i) {
+                        if (text.indexOf(this.options.separator[i]) !== -1) {
+                            var _text = text.replace(this.options.separator[i], '');
+                            if (!_text) {
+                                this.innerElement.innerText = '';
+                                this.innerElement.focus();
+                            } else {
+                                this.addBubble(text.replace(this.options.separator[i], ''));
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
             }
 
-            if (!this.innerElement.innerText.trim()) {
+            if (!this.innerElement.innerText.trim() || position === 0) {
                 this.toDeleteFlag = true;
             } else {
                 this.toDeleteFlag = false;
@@ -339,8 +382,6 @@
             if (this.keyup || typeof this.keyup === 'function') {
                 this.keyup(event);
             }
-
-            cursorManager.setEndOfContenteditable(this.innerElement);
         }
 
         function _onPaste() {
@@ -362,7 +403,15 @@
             this.element.appendChild(this.innerElement);
 
             this.element.addEventListener('focus', function() {
-                this.innerElement.focus();
+                cursorManager.setEndOfContenteditable(this.innerElement);
+            }.bind(this));
+
+            this.innerElement.addEventListener('click', function() {
+                if (cursorManager.getCaretPosition(this.innerElement) === 0) {
+                    this.toDeleteFlag = true;
+                } else {
+                    this.toDeleteFlag = false;
+                }
             }.bind(this));
         }
 
